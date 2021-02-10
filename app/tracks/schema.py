@@ -24,7 +24,7 @@ class CreateTrack(graphene.Mutation):
         description = graphene.String()
         url = graphene.String()
 
-    def mutate(self, info, title, description, url):
+    def mutate(self, info, title: str, description: str, url: str):
         track = Track(title=title, description=description, url=url)
         track.save()
         return CreateTrack(track=track)
