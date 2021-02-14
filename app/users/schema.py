@@ -1,6 +1,7 @@
 import graphene
-from graphene_django import DjangoObjectType
 from .models import User
+from graphene_django import DjangoObjectType
+from graphql_jwt.decorators import login_required
 
 
 class UserType(DjangoObjectType):
@@ -17,10 +18,12 @@ class Query(graphene.ObjectType):
     def resolve_user(self, info, id):
         return User.objects.get(id=id)
 
+    @login_required
     def resolve_me(self, info):
         user = info.context.user
-        if(user.is_anonymous):
-            raise Exception('Not logged in!')
+        # Can  use @login_required decorator from django-graphql-jwt to restrict queries and mutations to authenticated users instead of manually handling like below.
+        # if(user.is_anonymous):
+        #     raise Exception('Not logged in!')
         return user
 
 
